@@ -1,7 +1,7 @@
 import React from 'react';
 import Board from './Board';
 import './Game.css';
-import { getNextPlayer, calculateWinner } from '../handlers/GameRules';
+import GameRules from '../handlers/GameRulesHandler';
 
 class Game extends React.Component {
   constructor(props) {
@@ -20,11 +20,11 @@ class Game extends React.Component {
     const current = history[history.length - 1];
     const squares = current.squares.slice();
 
-    if (calculateWinner(squares) || squares[i]) {
+    if (GameRules.calculateWinner(squares) || squares[i]) {
       return;
     }
 
-    const nextPlayer = getNextPlayer(current.player);
+    const nextPlayer = GameRules.getNextPlayer(this.state.stepNumber + 1);
     squares[i] = current.player;
 
     this.setState({
@@ -45,7 +45,7 @@ class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = current ? calculateWinner(current.squares) : null;
+    const winner = current ? GameRules.calculateWinner(current.squares) : null;
 
     const moves = history.map((step, move) => {
       const desc = move ? 'Go to move #' + move : 'Go to game start';
